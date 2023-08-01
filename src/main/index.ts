@@ -39,8 +39,8 @@ function createWindow(): void {
     mainWindow.show();
   });
 
-  mainWindow.webContents.toggleDevTools();
-  // if (is.dev && process.env['ELECTRON_RENDERER_URL']) mainWindow.webContents.toggleDevTools()
+  // mainWindow.webContents.toggleDevTools();
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) mainWindow.webContents.toggleDevTools()
   mainWindow.on('ready-to-show', () => {
     const serverAddress = JSON.parse(readFileSync(process.cwd() + '/config.conf').toString());
     onIpc(mainWindow);
