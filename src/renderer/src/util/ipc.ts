@@ -1,8 +1,8 @@
 import router from '@renderer/router';
 import { useMainMessageStore } from '@renderer/store';
-import { ElMessage, ElMessageBox, ElProgress, dayjs } from 'element-plus';
-import { getSessionStorage } from './storage';
-import { h } from 'vue';
+import { ElMessage, ElMessageBox, dayjs } from 'element-plus';
+import { getLocalStorage } from './storage';
+import { useUpdateStore } from '@renderer/store/update';
 
 /**监听主进程发送的消息 */
 function onMessageByMain() {
@@ -31,21 +31,17 @@ function onMessageByMain() {
   });
   window.electron.ipcRenderer.on('download-progress', (_event, params) => {
     console.log(params);
-    ElMessageBox({
-      message: h(ElProgress, {
-        percentage: +params.percent.toFixed(2)
-      }),
-      closeOnClickModal: false,
-      showConfirmButton: false,
-      showClose: false
-    });
+    useUpdateStore().updateInfo = params;
   });
   window.electron.ipcRenderer.on('update-downloaded', (_event, params) => {
     console.log(params);
+    // useUpdateStore().updateInfo = {
+    //   percent:100
+    // };
   });
   window.electron.ipcRenderer.on('update-not-available', (_event, params) => {
     console.log('已经是最新版本', params);
-    if (getSessionStorage('user'))
+    if (getLocalStorage('userInfo'))
       ElMessage.success({ message: '当前已经是最新版本', duration: 1000 });
   });
 }

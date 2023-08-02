@@ -1,6 +1,6 @@
 import { BrowserWindow, Menu, Tray, shell } from 'electron';
 import { join } from 'path';
-import icon from '../../../resources/icon.png?asset';
+import icon from '../../../resources/favicon.ico?asset';
 import { is } from '@electron-toolkit/utils';
 import { offIpc, onIpc } from '../util/ipc';
 import { checkUpdate } from '../util/update';
@@ -20,7 +20,7 @@ function createLoginWindow(): void {
     }
   });
   loginWindow.menuBarVisible = false;
-  const tray = new Tray(join(__dirname, '../../resources/icon.png'));
+  const tray = new Tray(join(__dirname, '../../resources/favicon.ico'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '退出',

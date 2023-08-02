@@ -28,6 +28,11 @@ const router = createRouter({
       path: '/login',
       component: () => import('@renderer/views/Login.vue'),
       name: 'login'
+    },
+    {
+      path: '/update',
+      component: () => import('@renderer/views/Update.vue'),
+      name: 'update'
     }
   ]
 });

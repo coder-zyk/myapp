@@ -1,7 +1,7 @@
 import { ipcMain, BrowserWindow } from 'electron';
 import { checkUpdate } from './update';
-import { autoUpdater } from 'electron-updater';
 import { createMainWindow } from '../window/main';
+import { createUpdateWindow } from '../window/update';
 
 function onMin(browserWindow: BrowserWindow) {
   ipcMain.on('min', () => {
@@ -30,9 +30,10 @@ function onCheckUpdate(browserWindow: BrowserWindow) {
     checkUpdate(browserWindow);
   });
 }
-function onInstall() {
+function onInstall(browserWindow: BrowserWindow) {
   ipcMain.on('install', () => {
-    autoUpdater.downloadUpdate();
+    browserWindow.close();
+    createUpdateWindow();
   });
 }
 function onLogin(browserWindow: BrowserWindow) {
@@ -47,7 +48,7 @@ function onIpc(browserWindow: BrowserWindow) {
   onClose(browserWindow);
   onExit(browserWindow);
   onCheckUpdate(browserWindow);
-  onInstall();
+  onInstall(browserWindow);
   onLogin(browserWindow);
 }
 function offIpc() {

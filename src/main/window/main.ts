@@ -1,6 +1,6 @@
 import { BrowserWindow, Menu, Tray, shell } from 'electron';
 import { join } from 'path';
-import icon from '../../../resources/icon.png?asset';
+import icon from '../../../resources/favicon.ico?asset';
 import { is } from '@electron-toolkit/utils';
 import { offIpc, onIpc } from '../util/ipc';
 /**创建主窗口 */
@@ -13,6 +13,7 @@ function createMainWindow(): void {
     minWidth: 650,
     show: false,
     titleBarStyle: 'hidden',
+    icon: join(__dirname, '../../resources/favicon.ico'),
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -20,7 +21,7 @@ function createMainWindow(): void {
     }
   });
   mainWindow.menuBarVisible = false;
-  const tray = new Tray(join(__dirname, '../../resources/icon.png'));
+  const tray = new Tray(join(__dirname, '../../resources/favicon.ico'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '退出',
