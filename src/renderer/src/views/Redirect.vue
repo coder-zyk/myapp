@@ -3,9 +3,9 @@ import NavBar from '@renderer/components/navbar/Index.vue';
 import Operate from '@renderer/components/operate/Index.vue';
 import { useConfStore } from '@renderer/store/conf';
 import SocktUtil from '@renderer/util/socket';
-import { getSessionStorage } from '@renderer/util/storage';
+import { getLocalStorage } from '@renderer/util/storage';
 import { onUnmounted } from 'vue';
-const currentUser = getSessionStorage('user');
+const currentUser = getLocalStorage('userInfo');
 const socket = new SocktUtil(`ws://${useConfStore().serverAddress}/websocket?token=zyk`);
 function onOpen(event) {
   console.log(event, 'open');

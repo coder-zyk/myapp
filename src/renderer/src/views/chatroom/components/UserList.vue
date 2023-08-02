@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { GetUserList } from '@renderer/api';
 import { UserInfo } from '@renderer/types';
-import { getSessionStorage } from '@renderer/util/storage';
+import { getLocalStorage } from '@renderer/util/storage';
 import { ref } from 'vue';
 const props = defineProps<{ modelValue: string }>();
 const emits = defineEmits<{ 'update:modelValue': [modleValue: string] }>();
-const currentUser = getSessionStorage('user');
+const currentUser = getLocalStorage('userInfo');
 
 const userList = ref<UserInfo[]>([]);
 GetUserList({ userName: currentUser.userName }).then((res) => {

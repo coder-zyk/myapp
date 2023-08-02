@@ -1,4 +1,3 @@
-import { getSessionStorage } from '@renderer/util/storage';
 import { createRouter, createWebHistory } from 'vue-router';
 const router = createRouter({
   history: createWebHistory(),
@@ -32,11 +31,5 @@ const router = createRouter({
     }
   ]
 });
-router.beforeEach((to) => {
-  if (!getSessionStorage('user') && !['/login', '/404'].includes(to.path))
-    return { path: '/login' };
-  else {
-    return true;
-  }
-});
+
 export default router;

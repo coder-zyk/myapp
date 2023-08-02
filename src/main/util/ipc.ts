@@ -1,6 +1,7 @@
 import { ipcMain, BrowserWindow } from 'electron';
 import { checkUpdate } from './update';
 import { autoUpdater } from 'electron-updater';
+import { createMainWindow } from '../window/main';
 
 function onMin(browserWindow: BrowserWindow) {
   ipcMain.on('min', () => {
@@ -17,13 +18,11 @@ function onMax(browserWindow: BrowserWindow) {
 function onClose(browserWindow: BrowserWindow) {
   ipcMain.on('close', () => {
     browserWindow.hide();
-    // browserWindow.close()
   });
 }
 function onExit(browserWindow: BrowserWindow) {
   ipcMain.on('exit', () => {
     browserWindow.close();
-    // browserWindow.close()
   });
 }
 function onCheckUpdate(browserWindow: BrowserWindow) {
@@ -36,6 +35,12 @@ function onInstall() {
     autoUpdater.downloadUpdate();
   });
 }
+function onLogin(browserWindow: BrowserWindow) {
+  ipcMain.on('login', () => {
+    browserWindow.close();
+    createMainWindow();
+  });
+}
 function onIpc(browserWindow: BrowserWindow) {
   onMin(browserWindow);
   onMax(browserWindow);
@@ -43,5 +48,9 @@ function onIpc(browserWindow: BrowserWindow) {
   onExit(browserWindow);
   onCheckUpdate(browserWindow);
   onInstall();
+  onLogin(browserWindow);
 }
-export { onIpc };
+function offIpc() {
+  ipcMain.removeAllListeners();
+}
+export { onIpc, offIpc };

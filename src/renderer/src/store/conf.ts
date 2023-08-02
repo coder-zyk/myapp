@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 export const useConfStore = defineStore('conf', () => {
-  const conf = ref<{ serverAddress: string }>();
+  const conf = ref<{ serverAddress: string }>(window.api.conf);
   const serverAddress = computed(() => {
-    return conf.value?.serverAddress ?? '192.168.1.2:3000';
+    return conf.value.serverAddress;
   });
   return { conf, serverAddress };
 });

@@ -1,6 +1,5 @@
 import router from '@renderer/router';
 import { useMainMessageStore } from '@renderer/store';
-import { useConfStore } from '@renderer/store/conf';
 import { ElMessage, ElMessageBox, ElProgress, dayjs } from 'element-plus';
 import { getSessionStorage } from './storage';
 import { h } from 'vue';
@@ -10,9 +9,6 @@ function onMessageByMain() {
   window.electron.ipcRenderer.on('message', (_event, params) => {
     useMainMessageStore().message = params;
     router.push(params.path);
-  });
-  window.electron.ipcRenderer.on('conf', (_event, params) => {
-    useConfStore().conf = params;
   });
   window.electron.ipcRenderer.on('update-available', (_event, params) => {
     console.log('已发布新版本', params);

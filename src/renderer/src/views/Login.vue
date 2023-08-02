@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { Login } from '@renderer/api/index';
-import router from '@renderer/router';
-import { setSessionStorage } from '@renderer/util/storage';
+import { clearLocalStorage, setLocalStorage } from '@renderer/util/storage';
 import { ElLoading, ElMessage } from 'element-plus';
 import { reactive, ref } from 'vue';
-
+clearLocalStorage();
 const loginInfo = reactive({
   userName: '',
   passWord: ''
@@ -20,8 +19,8 @@ function login() {
       Login(loginInfo)
         .then((res) => {
           if (res.code == 1) {
-            setSessionStorage('user', (res.data as { id: number; userName: string }[])[0]);
-            router.push('/');
+            setLocalStorage('userInfo', (res.data as { id: number; userName: string }[])[0]);
+            window.electron.ipcRenderer.send('login');
           } else {
             ElMessage.error(res.message);
           }

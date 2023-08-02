@@ -2,7 +2,7 @@
 import { Message } from '..';
 import { checkMessage } from '../util';
 import { dayjs } from 'element-plus';
-import { getSessionStorage } from '@renderer/util/storage';
+import { getLocalStorage } from '@renderer/util/storage';
 import SocktUtil from '@renderer/util/socket';
 import { GetMessageList } from '@renderer/api/index';
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -19,7 +19,7 @@ watch(
   { deep: true }
 );
 const socket = new SocktUtil(`ws://${useConfStore().serverAddress}/websocket?token=zyk`);
-const currentUser = getSessionStorage('user');
+const currentUser = getLocalStorage('userInfo');
 function onMessage(message) {
   if (message.code == 1) {
     messageList.value.push(message.data);
