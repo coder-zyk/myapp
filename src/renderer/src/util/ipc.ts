@@ -32,6 +32,8 @@ function onMessageByMain() {
     useUpdateStore().updateInfo = params;
   });
   window.electron.ipcRenderer.on('update-downloaded', (_event, params) => {
+    console.log(params);
+
     useUpdateStore().updateInfo = {
       percent: 100,
       total: 0,
