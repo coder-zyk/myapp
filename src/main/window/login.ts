@@ -8,11 +8,12 @@ import { checkUpdate } from '../util/update';
 function createLoginWindow(): void {
   // Create the browser window.
   const loginWindow = new BrowserWindow({
-    width: 400,
-    height: 500,
+    width: 320,
+    height: 450,
     show: false,
     resizable: false,
     titleBarStyle: 'hidden',
+    fullscreenable: false,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -34,8 +35,6 @@ function createLoginWindow(): void {
   tray.on('click', () => {
     loginWindow.show();
   });
-
-  // loginWindow.webContents.toggleDevTools();
 
   loginWindow.on('ready-to-show', () => {
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) loginWindow.webContents.toggleDevTools();

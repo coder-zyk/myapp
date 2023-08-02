@@ -8,10 +8,11 @@ import { install } from '../util/update';
 function createUpdateWindow(): void {
   // Create the browser window.
   const updateWindow = new BrowserWindow({
-    width: 800,
+    width: 600,
     height: 200,
     show: false,
     resizable: false,
+    fullscreenable: false,
     title: '下载中',
     icon: join(__dirname, '../../resources/favicon.ico'),
     ...(process.platform === 'linux' ? { icon } : {}),

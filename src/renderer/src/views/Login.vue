@@ -1,67 +1,102 @@
 <script setup lang="ts">
 import { Login } from '@renderer/api/index';
-import { clearLocalStorage, setLocalStorage } from '@renderer/util/storage';
+import { setLocalStorage } from '@renderer/util/storage';
 import { ElLoading, ElMessage } from 'element-plus';
-import { reactive, ref } from 'vue';
-clearLocalStorage();
+import { computed, reactive } from 'vue';
 const loginInfo = reactive({
   userName: '',
   passWord: ''
 });
+const disabledLogin = computed(() => {
+  if (loginInfo.passWord && loginInfo.userName) return false;
+  else return true;
+});
 function login() {
-  formRef.value
-    .validate()
-    .then(() => {
-      const loading = ElLoading.service({
-        fullscreen: true,
-        text: '登陆中'
-      });
-      Login(loginInfo)
-        .then((res) => {
-          if (res.code == 1) {
-            setLocalStorage('userInfo', (res.data as { id: number; userName: string }[])[0]);
-            window.electron.ipcRenderer.send('login');
-          } else {
-            ElMessage.error(res.message);
-          }
-        })
-        .finally(() => {
-          loading.close();
-        });
+  const loading = ElLoading.service({
+    fullscreen: true,
+    text: '登陆中'
+  });
+  Login(loginInfo)
+    .then((res) => {
+      if (res.code == 1) {
+        setLocalStorage('userInfo', (res.data as { id: number; userName: string }[])[0]);
+        window.electron.ipcRenderer.send('login');
+      } else {
+        ElMessage.error(res.message);
+      }
     })
-    .catch(() => {});
+    .finally(() => {
+      loading.close();
+    });
 }
-const formRef = ref();
-const rules = {
-  userName: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-  passWord: [{ required: true, message: '请输入密码', trigger: 'blur' }]
-};
 function exit() {
   window.electron.ipcRenderer.send('exit');
 }
 </script>
 <template>
   <div class="dv-login">
-    <el-form ref="formRef" :model="loginInfo" :rules="rules">
-      <el-form-item label="账号:" prop="userName">
-        <el-input v-model="loginInfo.userName"></el-input>
-      </el-form-item>
-      <el-form-item label="密码:" prop="passWord">
-        <el-input v-model="loginInfo.passWord" type="password"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="login">登陆</el-button>
-        <el-button @click="exit">退出</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="logininfo">
+      <div class="input">
+        <el-input
+          v-model="loginInfo.userName"
+          clearable
+          placeholder="请输入账号"
+          maxlength="16"
+          size="large"
+          class="username"
+        ></el-input>
+        <el-input
+          v-model="loginInfo.passWord"
+          type="password"
+          placeholder="请输入密码"
+          maxlength="16"
+          clearable
+          size="large"
+          class="password"
+          unselectable="on"
+        ></el-input>
+      </div>
+      <el-button type="primary" @click="login" :disabled="disabledLogin">登陆</el-button>
+      <el-button @click="exit">退出</el-button>
+    </div>
   </div>
 </template>
 <style scoped lang="scss">
 .dv-login {
+  -webkit-app-region: drag;
   height: 100vh;
-  width: 100%;
-  display: flex;
+  padding: 0px 35px;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(#407aaa, #fff, #407aaa);
+  font-size: 16px;
+  display: grid;
+  .logininfo {
+    -webkit-app-region: no-drag;
+    font-size: 16px;
+    font-weight: 700;
+    .username {
+      width: 250px;
+      margin-bottom: 20px;
+    }
+    .password {
+      width: 250px;
+      margin-bottom: 20px;
+    }
+    :deep(.el-input__wrapper) {
+      position: relative;
+      padding: 1px 40px;
+      .el-input__suffix {
+        position: absolute;
+        right: 15px;
+      }
+      input {
+        width: calc(100% - 40px);
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+      }
+    }
+  }
 }
 </style>

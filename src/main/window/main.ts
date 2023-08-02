@@ -73,6 +73,7 @@ function createMainWindow(): void {
   }
   mainWindow.on('close', () => {
     offIpc();
+    mainWindow.webContents.send('exit');
     tray.destroy();
   });
 }

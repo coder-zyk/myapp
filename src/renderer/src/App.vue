@@ -3,8 +3,6 @@ import { onMounted } from 'vue';
 import { onMessageByMain } from './util/ipc';
 
 onMounted(() => {
-  console.log(12213);
-
   onMessageByMain();
 });
 </script>
