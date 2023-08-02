@@ -3,7 +3,6 @@ import { join } from 'path';
 import icon from '../../../resources/icon.png?asset';
 import { is } from '@electron-toolkit/utils';
 import { offIpc, onIpc } from '../util/ipc';
-import { checkUpdate } from '../util/update';
 /**创建主窗口 */
 function createMainWindow(): void {
   // Create the browser window.
@@ -41,7 +40,6 @@ function createMainWindow(): void {
   mainWindow.on('ready-to-show', () => {
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) mainWindow.webContents.toggleDevTools();
     onIpc(mainWindow);
-    checkUpdate(mainWindow);
     mainWindow.show();
     mainWindow.webContents.send('message', { path: '/' });
   });
