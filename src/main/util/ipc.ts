@@ -33,7 +33,7 @@ function onCheckUpdate(browserWindow: BrowserWindow) {
 }
 function onInstall() {
   ipcMain.on('install', () => {
-    autoUpdater.quitAndInstall();
+    autoUpdater.downloadUpdate();
   });
 }
 function onIpc(browserWindow: BrowserWindow) {

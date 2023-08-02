@@ -1,7 +1,9 @@
 import router from '@renderer/router';
 import { useMainMessageStore } from '@renderer/store';
 import { useConfStore } from '@renderer/store/conf';
-import { ElMessage, ElMessageBox, dayjs } from 'element-plus';
+import { ElMessage, ElMessageBox, ElProgress, dayjs } from 'element-plus';
+import { getSessionStorage } from './storage';
+import { h } from 'vue';
 
 /**监听主进程发送的消息 */
 function onMessageByMain() {
@@ -14,19 +16,12 @@ function onMessageByMain() {
   });
   window.electron.ipcRenderer.on('update-available', (_event, params) => {
     console.log('已发布新版本', params);
-  });
-  window.electron.ipcRenderer.on('download-progress', (_event, params) => {
-    console.log(params);
-  });
-  window.electron.ipcRenderer.on('update-downloaded', (_event, params) => {
-    console.log(params);
     ElMessageBox.confirm(
-      `发布日期\uff1a${dayjs(params.releaseDate).format('YYYY-MM-DD HH:mm:ss')}<br />版本号\uff1a${
+      `发布日期\uff1a${dayjs(params.releaseDate).format('YYYY-MM-DD HH:mm:ss')}\r\n版本号\uff1a${
         params.version
       }`,
-      '检测到新版本,是否马上安装',
+      '检测到新版本,是否安装',
       {
-        dangerouslyUseHTMLString: true,
         confirmButtonText: '是',
         cancelButtonText: '否'
       }
@@ -36,9 +31,24 @@ function onMessageByMain() {
       })
       .catch(() => {});
   });
+  window.electron.ipcRenderer.on('download-progress', (_event, params) => {
+    console.log(params);
+    ElMessageBox({
+      message: h(ElProgress, {
+        percentage: +params.percent.toFixed(2)
+      }),
+      closeOnClickModal: false,
+      showConfirmButton: false,
+      showClose: false
+    });
+  });
+  window.electron.ipcRenderer.on('update-downloaded', (_event, params) => {
+    console.log(params);
+  });
   window.electron.ipcRenderer.on('update-not-available', (_event, params) => {
     console.log('已经是最新版本', params);
-    ElMessage.success('当前已是最新版本');
+    if (getSessionStorage('user'))
+      ElMessage.success({ message: '当前已经是最新版本', duration: 1000 });
   });
 }
 export { onMessageByMain };
