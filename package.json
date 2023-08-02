@@ -1,6 +1,6 @@
 {
   "name": "myapp",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "学习聊天",
   "main": "./out/main/index.js",
   "author": "zyk",
@@ -48,6 +48,7 @@
     "eslint": "^8.44.0",
     "eslint-plugin-vue": "^9.15.1",
     "husky": "^8.0.0",
+    "lint-staged": "^13.2.3",
     "prettier": "^2.8.8",
     "sass": "^1.64.0",
     "typescript": "^5.1.6",
