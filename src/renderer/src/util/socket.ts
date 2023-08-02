@@ -39,7 +39,7 @@ class SocktUtil {
     };
   }
   on(event: SocketUtilEvent, fn: (params: unknown) => void) {
-    if (!this.listeners.find((item) => (item.fn = fn))) {
+    if (!this.listeners.find((item) => item.fn == fn)) {
       this.listeners.push({ event, fn });
     }
   }
