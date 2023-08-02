@@ -17,11 +17,13 @@ function onMessageByMain() {
   window.electron.ipcRenderer.on('update-available', (_event, params) => {
     console.log('已发布新版本', params);
     ElMessageBox.confirm(
-      `发布日期\uff1a${dayjs(params.releaseDate).format('YYYY-MM-DD HH:mm:ss')}\r\n版本号\uff1a${
+      `发布日期\uff1a${dayjs(params.releaseDate).format('YYYY-MM-DD')}<br>版本号\uff1a${
         params.version
       }`,
       '检测到新版本,是否安装',
       {
+        customStyle: { width: '300px' },
+        dangerouslyUseHTMLString: true,
         confirmButtonText: '是',
         cancelButtonText: '否'
       }

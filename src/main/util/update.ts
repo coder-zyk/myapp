@@ -6,10 +6,10 @@ function checkUpdate(mainWindow: BrowserWindow) {
   function downloadProgress(info: ProgressInfo) {
     mainWindow.webContents.send('download-progress', info);
   }
-  autoUpdater.forceDevUpdateConfig = true;
+  // autoUpdater.forceDevUpdateConfig = true;
   autoUpdater.disableWebInstaller = true;
   autoUpdater.autoDownload = false;
-  autoUpdater.setFeedURL({ url: 'http://myusers.cn:9000', provider: 'generic' });
+  // autoUpdater.setFeedURL({ url: 'http://myusers.cn:9000', provider: 'generic' });
   autoUpdater.checkForUpdates();
   autoUpdater.once('update-available', (info: UpdateInfo) => {
     mainWindow.webContents.send('update-available', info);

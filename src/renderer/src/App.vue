@@ -14,4 +14,3 @@ onMounted(() => {
 <style lang="scss">
 @import './assets/css/styles.scss';
 </style>
-./util/ipc
