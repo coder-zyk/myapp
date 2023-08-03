@@ -35,11 +35,12 @@ const messageList = ref<Message[]>([]);
 function sendMessage() {
   let messageHtml = inputRef.value!.innerText!;
   messageHtml = checkMessage(messageHtml);
-  const message = {
+  const message: Message = {
     fromUserName: currentUser.userName,
     createTime: new Date().getTime(),
     content: messageHtml,
-    toUserName: props.otherUserName
+    toUserName: props.otherUserName,
+    type: 1
   };
   if (messageHtml) {
     messageList.value.push(message);
@@ -104,6 +105,7 @@ const client = new CallClient(currentUser.userName);
 const uploadRef = ref();
 function onFileChange(uploadFile: UploadFile) {
   client.send(props.otherUserName, uploadFile);
+  uploadRef.value.clearFiles();
 }
 </script>
 <template>
@@ -119,7 +121,8 @@ function onFileChange(uploadFile: UploadFile) {
           <div class="avatar"><img src="/icon/user.png" alt="" draggable="false" /></div>
           <div class="content">
             <div class="time">{{ dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
-            <div class="info">{{ item.content }}</div>
+            <div v-if="item.type == 1" class="info">{{ item.content }}</div>
+            <div v-else-if="item.type == 2" class="info">{{ item.content }}</div>
           </div>
         </div>
       </el-scrollbar>
@@ -132,8 +135,9 @@ function onFileChange(uploadFile: UploadFile) {
           :auto-upload="false"
           :on-change="onFileChange"
           :limit="1"
+          :show-file-list="false"
         >
-          <el-icon><Folder /></el-icon
+          <el-icon title="上传文件"><Folder /></el-icon
         ></el-upload>
       </div>
       <el-scrollbar ref="inputScrollRef" style="height: 119px; width: 100%">

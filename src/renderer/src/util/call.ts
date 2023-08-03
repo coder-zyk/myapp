@@ -17,6 +17,7 @@ export class CallClient {
     this.client.on('connection', (val) => {
       this.dataConnect = val;
       this.dataConnect.on('data', (data) => {
+        window.electron.ipcRenderer.send('receive-file', data);
         console.log(data, '接收');
       });
     });
@@ -39,8 +40,8 @@ export class CallClient {
     this.dataConnect.on('close', () => {
       console.log('已关闭:', friendId);
     });
-    this.dataConnect.on('data', (data) => {
-      console.log(data, '接收');
+    this.dataConnect.dataChannel.addEventListener('message', (event) => {
+      console.log(event);
     });
   }
 }

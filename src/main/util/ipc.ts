@@ -2,7 +2,8 @@ import { ipcMain, BrowserWindow } from 'electron';
 import { checkUpdate } from './update';
 import { createMainWindow } from '../window/main';
 import { createUpdateWindow } from '../window/update';
-
+import fs from 'fs';
+import { join } from 'path';
 function onMin(browserWindow: BrowserWindow) {
   ipcMain.on('min', () => {
     browserWindow.minimize();
@@ -42,6 +43,23 @@ function onLogin(browserWindow: BrowserWindow) {
     createMainWindow(params);
   });
 }
+function onReceiveFile() {
+  ipcMain.on('receive-file', (_event, params) => {
+    if (fs.existsSync(join(process.cwd(), '/Receive File'))) {
+      fs.writeFileSync(
+        join(process.cwd(), `/Receive File/${params.name}`),
+        new Int32Array(params.raw)
+      );
+    } else {
+      fs.mkdir(join(process.cwd(), '/Receive File'), () => {
+        fs.writeFileSync(
+          join(process.cwd(), `/Receive File/${params.name}`),
+          new Int32Array(params.raw)
+        );
+      });
+    }
+  });
+}
 function onIpc(browserWindow: BrowserWindow) {
   onMin(browserWindow);
   onMax(browserWindow);
@@ -50,6 +68,7 @@ function onIpc(browserWindow: BrowserWindow) {
   onCheckUpdate(browserWindow);
   onInstall(browserWindow);
   onLogin(browserWindow);
+  onReceiveFile();
 }
 function offIpc() {
   ipcMain.removeAllListeners();
