@@ -24,6 +24,8 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-unused-expressions": "error",
     '@typescript-eslint/no-var-requires': 'off',
     'vue/require-default-prop': 'off',
     'vue/multi-word-component-names': 'off'
