@@ -14,20 +14,15 @@ function onOpen(event) {
     userName: currentUser.userName
   });
 }
-function onMessage(event) {
-  console.log(event, 'message');
-}
 function onClose(event) {
   console.log(event, 'close');
   socket.clear();
 }
 socket.on('open', onOpen);
-socket.on('message', onMessage);
 socket.on('close', onClose);
 
 onUnmounted(() => {
   socket.off('open', onOpen);
-  socket.off('message', onMessage);
   socket.off('close', onClose);
 });
 </script>

@@ -23,7 +23,7 @@ watch(
 const socket = new SocktUtil(`ws://${useConfStore().serverAddress}/websocket?token=zyk`);
 const currentUser = getLocalStorage('userInfo');
 function onMessage(message) {
-  if (message.code == 1) {
+  if (message.code == 1 && message.data.fromUserName == props.otherUserName) {
     messageList.value.push(message.data);
     nextTick(() => {
       scrollRef.value.setScrollTop(scrollRef.value.wrapRef.scrollHeight);
