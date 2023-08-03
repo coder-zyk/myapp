@@ -3,7 +3,8 @@ import { join } from 'path';
 import icon from '../../../resources/favicon.ico?asset';
 import { is } from '@electron-toolkit/utils';
 import { offIpc, onIpc } from '../util/ipc';
-import { checkUpdate } from '../util/update';
+import { autoUpdater } from 'electron-updater';
+import { createUpdateWindow } from './update';
 /**创建主窗口 */
 function createLoginWindow(): void {
   // Create the browser window.
@@ -37,11 +38,20 @@ function createLoginWindow(): void {
   });
 
   loginWindow.on('ready-to-show', () => {
-    if (is.dev && process.env['ELECTRON_RENDERER_URL']) loginWindow.webContents.toggleDevTools();
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      autoUpdater.forceDevUpdateConfig = true;
+      loginWindow.webContents.toggleDevTools();
+    }
     onIpc(loginWindow);
-    checkUpdate(loginWindow);
     loginWindow.show();
     loginWindow.webContents.send('message', { path: '/login' });
+    autoUpdater.checkForUpdates();
+    autoUpdater.disableWebInstaller = false;
+    autoUpdater.autoDownload = false;
+    autoUpdater.once('update-available', () => {
+      createUpdateWindow();
+      loginWindow.close();
+    });
   });
   loginWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
