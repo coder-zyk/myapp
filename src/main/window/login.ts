@@ -14,6 +14,7 @@ function createLoginWindow(): void {
     show: false,
     resizable: false,
     titleBarStyle: 'hidden',
+    icon: join(__dirname, '../../resources/favicon.ico'),
     fullscreenable: false,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {

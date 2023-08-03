@@ -44,6 +44,12 @@ function createMainWindow(): void {
     mainWindow.show();
     mainWindow.webContents.send('message', { path: '/' });
   });
+  mainWindow.on('maximize',()=>{
+    mainWindow.webContents.send('maximize');
+  })
+  mainWindow.on('unmaximize',()=>{
+    mainWindow.webContents.send('unmaximize');
+  })
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     return { action: 'deny' };

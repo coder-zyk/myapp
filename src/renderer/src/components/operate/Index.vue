@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-const isMax = ref(false);
+import { useConfStore } from '@renderer/store/conf';
 const operateList = [
   {
     id: 1,
@@ -24,7 +23,6 @@ function clickHandle(_event: Event, index: number) {
       window.electron.ipcRenderer.send('min');
       break;
     case 2:
-      isMax.value = !isMax.value;
       window.electron.ipcRenderer.send('max', true);
       break;
     case 3:
@@ -43,7 +41,7 @@ function clickHandle(_event: Event, index: number) {
       class="dv-operate-item"
       @click="clickHandle($event, item.id)"
     >
-      <div v-if="isMax && item.id == 2" class="icon-3zuidahua-3"></div>
+      <div v-if="useConfStore().isMax && item.id == 2" class="icon-3zuidahua-3"></div>
       <div v-else :class="item.className"></div>
     </div>
   </div>

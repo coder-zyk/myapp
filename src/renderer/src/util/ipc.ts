@@ -3,6 +3,7 @@ import { useMainMessageStore } from '@renderer/store';
 import { ElMessage, ElMessageBox, dayjs } from 'element-plus';
 import { clearLocalStorage, getLocalStorage } from './storage';
 import { useUpdateStore } from '@renderer/store/update';
+import { useConfStore } from '@renderer/store/conf';
 
 /**监听主进程发送的消息 */
 function onMessageByMain() {
@@ -42,12 +43,18 @@ function onMessageByMain() {
       delta: 0
     };
   });
-  window.electron.ipcRenderer.on('update-not-available', (_event) => {
+  window.electron.ipcRenderer.on('update-not-available', () => {
     if (getLocalStorage('userInfo'))
       ElMessage.success({ message: '当前已经是最新版本', duration: 1000 });
   });
   window.electron.ipcRenderer.on('exit', () => {
     clearLocalStorage();
+  });
+  window.electron.ipcRenderer.on('maximize', () => {
+    useConfStore().isMax = true;
+  });
+  window.electron.ipcRenderer.on('unmaximize', () => {
+    useConfStore().isMax = false;
   });
 }
 export { onMessageByMain };
