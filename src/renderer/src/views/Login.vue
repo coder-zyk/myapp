@@ -19,10 +19,13 @@ function login() {
   Login(loginInfo)
     .then((res) => {
       if (res.code == 1) {
-        setLocalStorage('userInfo', (res.data as { id: number; userName: string }[])[0]);
+        setLocalStorage('userInfo', res.data as { id: number; userName: string });
         window.electron.ipcRenderer.send('login');
       } else {
-        ElMessage.error(res.message);
+        ElMessage.error({
+          message: res.message,
+          appendTo: document.querySelector('.dv-login') as HTMLElement
+        });
       }
     })
     .finally(() => {
@@ -64,6 +67,9 @@ function exit() {
   </div>
 </template>
 <style scoped lang="scss">
+:deep(.el-message) {
+  padding: 5px;
+}
 .dv-login {
   -webkit-app-region: drag;
   height: 100vh;
