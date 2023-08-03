@@ -20,7 +20,7 @@ function login() {
     .then((res) => {
       if (res.code == 1) {
         setLocalStorage('userInfo', res.data as { id: number; userName: string });
-        window.electron.ipcRenderer.send('login');
+        window.electron.ipcRenderer.send('login', res.data);
       } else {
         ElMessage.error({
           message: res.message,

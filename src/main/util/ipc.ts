@@ -37,9 +37,9 @@ function onInstall(browserWindow: BrowserWindow) {
   });
 }
 function onLogin(browserWindow: BrowserWindow) {
-  ipcMain.on('login', () => {
+  ipcMain.on('login', (_event, params) => {
     browserWindow.close();
-    createMainWindow();
+    createMainWindow(params);
   });
 }
 function onIpc(browserWindow: BrowserWindow) {

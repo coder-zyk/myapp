@@ -4,7 +4,7 @@ import icon from '../../../resources/favicon.ico?asset';
 import { is } from '@electron-toolkit/utils';
 import { offIpc, onIpc } from '../util/ipc';
 /**创建主窗口 */
-function createMainWindow(): void {
+function createMainWindow(userInfo): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
@@ -30,7 +30,7 @@ function createMainWindow(): void {
       }
     }
   ]);
-  tray.setToolTip('electron + vue');
+  tray.setToolTip(`账号\uff1a${userInfo.userName}`);
   tray.setContextMenu(contextMenu);
   tray.on('click', () => {
     mainWindow.show();
@@ -44,12 +44,12 @@ function createMainWindow(): void {
     mainWindow.show();
     mainWindow.webContents.send('message', { path: '/' });
   });
-  mainWindow.on('maximize',()=>{
+  mainWindow.on('maximize', () => {
     mainWindow.webContents.send('maximize');
-  })
-  mainWindow.on('unmaximize',()=>{
+  });
+  mainWindow.on('unmaximize', () => {
     mainWindow.webContents.send('unmaximize');
-  })
+  });
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     return { action: 'deny' };

@@ -32,7 +32,7 @@ function createLoginWindow(): void {
       }
     }
   ]);
-  tray.setToolTip('electron + vue');
+  tray.setToolTip('登陆');
   tray.setContextMenu(contextMenu);
   tray.on('click', () => {
     loginWindow.show();
