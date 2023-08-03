@@ -36,28 +36,30 @@ function exit() {
 <template>
   <div class="dv-login">
     <div class="logininfo">
-      <div class="input">
-        <el-input
-          v-model="loginInfo.userName"
-          clearable
-          placeholder="请输入账号"
-          maxlength="16"
-          size="large"
-          class="username"
-        ></el-input>
-        <el-input
-          v-model="loginInfo.passWord"
-          type="password"
-          placeholder="请输入密码"
-          maxlength="16"
-          clearable
-          size="large"
-          class="password"
-          unselectable="on"
-        ></el-input>
+      <el-input
+        v-model="loginInfo.userName"
+        clearable
+        placeholder="请输入账号"
+        maxlength="16"
+        size="large"
+        class="username"
+      ></el-input>
+      <el-input
+        v-model="loginInfo.passWord"
+        type="password"
+        placeholder="请输入密码"
+        maxlength="16"
+        clearable
+        size="large"
+        class="password"
+        unselectable="on"
+      ></el-input>
+      <div class="button">
+        <el-button type="primary" :disabled="disabledLogin" class="button-item" @click="login"
+          >登陆</el-button
+        >
+        <el-button class="button-item" type="danger" @click="exit">退出</el-button>
       </div>
-      <el-button type="primary" @click="login" :disabled="disabledLogin">登陆</el-button>
-      <el-button @click="exit">退出</el-button>
     </div>
   </div>
 </template>
@@ -95,6 +97,12 @@ function exit() {
         text-align: center;
         font-size: 18px;
         font-weight: 700;
+      }
+    }
+    .button {
+      text-align: center;
+      .button-item {
+        width: 119px;
       }
     }
   }

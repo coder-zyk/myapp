@@ -8,7 +8,9 @@ function checkUpdate(mainWindow: BrowserWindow) {
   autoUpdater.disableWebInstaller = true;
   autoUpdater.autoDownload = false;
   // autoUpdater.setFeedURL({ url: 'http://myusers.cn:9000', provider: 'generic' });
-  autoUpdater.checkForUpdates();
+  autoUpdater.checkForUpdates().catch(() => {
+    mainWindow.webContents.send('check-failed');
+  });
   autoUpdater.once('update-available', (info: UpdateInfo) => {
     mainWindow.webContents.send('update-available', info);
   });
@@ -20,7 +22,9 @@ function install(mainWindow: BrowserWindow) {
   if (is.dev) autoUpdater.forceDevUpdateConfig = true;
   autoUpdater.checkForUpdates();
   autoUpdater.once('update-available', () => {
-    autoUpdater.downloadUpdate();
+    autoUpdater.downloadUpdate().catch(() => {
+      mainWindow.webContents.send('download-failed');
+    });
   });
   function downloadProgress(info: ProgressInfo) {
     mainWindow.webContents.send('download-progress', info);

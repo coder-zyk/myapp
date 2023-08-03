@@ -56,5 +56,11 @@ function onMessageByMain() {
   window.electron.ipcRenderer.on('unmaximize', () => {
     useConfStore().isMax = false;
   });
+  window.electron.ipcRenderer.on('check-failed', () => {
+    ElMessage.error('网络异常\uFF0C检查更新失败');
+  });
+  window.electron.ipcRenderer.on('download-failed', () => {
+    ElMessageBox.alert('下载更新失败', '网络异常');
+  });
 }
 export { onMessageByMain };

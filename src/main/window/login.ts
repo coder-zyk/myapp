@@ -46,7 +46,9 @@ function createLoginWindow(): void {
     onIpc(loginWindow);
     loginWindow.show();
     loginWindow.webContents.send('message', { path: '/login' });
-    autoUpdater.checkForUpdates();
+    autoUpdater.checkForUpdates().catch(() => {
+      loginWindow.webContents.send('check-failed');
+    });
     autoUpdater.disableWebInstaller = false;
     autoUpdater.autoDownload = false;
     autoUpdater.once('update-available', () => {
