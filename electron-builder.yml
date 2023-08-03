@@ -17,7 +17,7 @@ asarUnpack:
 afterSign: build/notarize.js
 win:
   executableName: myapp
-  icon: build/icon.ico
+  icon: build/logo.ico
 nsis:
   artifactName: ${name}-setup-${version}.${ext}
   shortcutName: ${productName}
