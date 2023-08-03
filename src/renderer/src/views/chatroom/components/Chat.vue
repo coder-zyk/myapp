@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { Message } from '..';
 import { checkMessage } from '../util';
-import { dayjs } from 'element-plus';
+import { UploadFile, dayjs } from 'element-plus';
 import { getLocalStorage } from '@renderer/util/storage';
 import SocktUtil from '@renderer/util/socket';
 import { GetMessageList } from '@renderer/api/index';
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useConfStore } from '@renderer/store/conf';
+import { Folder } from '@element-plus/icons-vue';
+import { CallClient } from '@renderer/util/call';
 const props = defineProps<{ otherUserName: string }>();
 watch(
   () => props.otherUserName,
@@ -98,6 +100,11 @@ function keyupHandle(event: KeyboardEvent) {
     sendMessage();
   }
 }
+const client = new CallClient(currentUser.userName);
+const uploadRef = ref();
+function onFileChange(uploadFile: UploadFile) {
+  client.send(props.otherUserName, uploadFile);
+}
 </script>
 <template>
   <div class="dv-chat">
@@ -118,7 +125,18 @@ function keyupHandle(event: KeyboardEvent) {
       </el-scrollbar>
     </div>
     <div class="chat-input" @click="inputRef?.focus()">
-      <el-scrollbar ref="inputScrollRef" style="height: 149px">
+      <div class="chat-operate">
+        <el-upload
+          ref="uploadRef"
+          action=""
+          :auto-upload="false"
+          :on-change="onFileChange"
+          :limit="1"
+        >
+          <el-icon><Folder /></el-icon
+        ></el-upload>
+      </div>
+      <el-scrollbar ref="inputScrollRef" style="height: 119px; width: 100%">
         <div
           ref="inputRef"
           class="input"
@@ -193,12 +211,20 @@ function keyupHandle(event: KeyboardEvent) {
     }
   }
   .chat-input {
-    height: 149px;
+    height: 119px;
     border-top: 1px solid #e8e8e8;
     padding: 10px;
     padding-bottom: 50px;
+    position: relative;
+    padding-top: 40px;
+    .chat-operate {
+      position: absolute;
+      height: 30px;
+      top: 5px;
+    }
     .input {
-      min-height: 149px;
+      width: auto;
+      min-height: 119px;
       color: #000;
       white-space: pre-wrap;
       &:focus-visible {

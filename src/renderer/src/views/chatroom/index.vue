@@ -23,7 +23,7 @@ const otherUserName = ref('');
     width: 80px;
   }
   .dv-chat-container {
-    flex: auto;
+    flex: 1;
   }
 }
 </style>
