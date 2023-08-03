@@ -1,6 +1,6 @@
 {
   "name": "myapp",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "学习聊天",
   "main": "./out/main/index.js",
   "author": "zyk",
