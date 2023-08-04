@@ -19,7 +19,7 @@ win:
   executableName: myapp
   icon: build/logo.ico
 nsis:
-  artifactName: ${name}-setup-${version}.${ext}
+  artifactName: ${name}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always

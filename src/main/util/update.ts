@@ -20,6 +20,7 @@ function checkUpdate(mainWindow: BrowserWindow) {
 }
 function install(mainWindow: BrowserWindow) {
   if (is.dev) autoUpdater.forceDevUpdateConfig = true;
+  autoUpdater.disableWebInstaller = true;
   autoUpdater.checkForUpdates();
   autoUpdater.once('update-available', () => {
     autoUpdater.downloadUpdate().catch(() => {
