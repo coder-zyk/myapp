@@ -11,7 +11,7 @@ const otherUserName = ref('');
     </div>
     <div class="dv-chat-container">
       <Chat v-if="otherUserName" :other-user-name="otherUserName"></Chat>
-      <el-empty v-else></el-empty>
+      <el-empty v-else description="请选择用户"></el-empty>
     </div>
   </div>
 </template>

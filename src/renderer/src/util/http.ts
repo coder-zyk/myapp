@@ -9,7 +9,11 @@ const instance = axios.create({
 });
 instance.interceptors.response.use(
   (response) => {
-    return response;
+    if (response.data.code == 1) return response;
+    else {
+      ElMessage.error(response.data.message);
+      return Promise.reject(response.data.message);
+    }
   },
   ({ message }) => {
     ElMessage.error(message);

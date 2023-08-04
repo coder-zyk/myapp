@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Login } from '@renderer/api/index';
 import { setLocalStorage } from '@renderer/util/storage';
-import { ElLoading, ElMessage } from 'element-plus';
+import { ElLoading } from 'element-plus';
 import { computed, reactive } from 'vue';
 const loginInfo = reactive({
   userName: '',
@@ -18,15 +18,8 @@ function login() {
   });
   Login(loginInfo)
     .then((res) => {
-      if (res.code == 1) {
-        setLocalStorage('userInfo', res.data as { id: number; userName: string });
-        window.electron.ipcRenderer.send('login', res.data);
-      } else {
-        ElMessage.error({
-          message: res.message,
-          appendTo: document.querySelector('.dv-login') as HTMLElement
-        });
-      }
+      setLocalStorage('userInfo', res.data as { id: number; userName: string });
+      window.electron.ipcRenderer.send('login', res.data);
     })
     .finally(() => {
       loading.close();
@@ -67,9 +60,6 @@ function exit() {
   </div>
 </template>
 <style scoped lang="scss">
-:deep(.el-message) {
-  padding: 5px;
-}
 .dv-login {
   -webkit-app-region: drag;
   height: 100vh;
