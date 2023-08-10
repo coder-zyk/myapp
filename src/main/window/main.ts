@@ -35,14 +35,11 @@ function createMainWindow(userInfo): void {
   tray.on('click', () => {
     mainWindow.show();
   });
-
-  // mainWindow.webContents.toggleDevTools();
-
   mainWindow.on('ready-to-show', () => {
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) mainWindow.webContents.toggleDevTools();
     onIpc(mainWindow);
     mainWindow.show();
-    mainWindow.webContents.send('message', { path: '/' });
+    mainWindow.webContents.send('navigation', { path: '/home' });
   });
   mainWindow.on('maximize', () => {
     mainWindow.webContents.send('maximize');

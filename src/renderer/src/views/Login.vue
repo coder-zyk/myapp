@@ -91,8 +91,8 @@ function exit() {
       input {
         width: calc(100% - 40px);
         text-align: center;
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 16px;
+        font-weight: 600;
       }
     }
     .button {

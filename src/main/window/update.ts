@@ -26,7 +26,7 @@ function createUpdateWindow(): void {
     onIpc(updateWindow);
     install(updateWindow);
     updateWindow.show();
-    updateWindow.webContents.send('message', { path: '/update' });
+    updateWindow.webContents.send('navigation', { path: '/update' });
   });
   updateWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);

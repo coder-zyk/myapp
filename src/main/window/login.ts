@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu, Tray, shell } from 'electron';
+import { BrowserWindow, Menu, Tray } from 'electron';
 import { join } from 'path';
 import icon from '../../../resources/favicon.ico?asset';
 import { is } from '@electron-toolkit/utils';
@@ -43,9 +43,10 @@ function createLoginWindow(): void {
       autoUpdater.forceDevUpdateConfig = true;
       loginWindow.webContents.toggleDevTools();
     }
+
     onIpc(loginWindow);
     loginWindow.show();
-    loginWindow.webContents.send('message', { path: '/login' });
+    // loginWindow.webContents.send('navigation', { path: '/' });
     autoUpdater.checkForUpdates().catch(() => {
       loginWindow.webContents.send('check-failed');
     });
@@ -56,10 +57,10 @@ function createLoginWindow(): void {
       loginWindow.close();
     });
   });
-  loginWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url);
-    return { action: 'deny' };
-  });
+  // loginWindow.webContents.setWindowOpenHandler((details) => {
+  //   shell.openExternal(details.url);
+  //   return { action: 'deny' };
+  // });
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     loginWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
   } else {

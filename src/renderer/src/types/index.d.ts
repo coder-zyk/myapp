@@ -5,4 +5,6 @@ export type LoginInfo = {
 export type UserInfo = {
   id: number;
   userName: string;
+  isLogin: number;
+  count: number;
 };

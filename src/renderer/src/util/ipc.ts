@@ -4,10 +4,11 @@ import { ElMessage, ElMessageBox, dayjs } from 'element-plus';
 import { clearLocalStorage, getLocalStorage } from './storage';
 import { useUpdateStore } from '@renderer/store/update';
 import { useConfStore } from '@renderer/store/conf';
+import { useSocketStore } from '@renderer/store/socket';
 
 /**监听主进程发送的消息 */
 function onMessageByMain() {
-  window.electron.ipcRenderer.on('message', (_event, params) => {
+  window.electron.ipcRenderer.on('navigation', (_event, params) => {
     useMainMessageStore().message = params;
     router.push(params.path);
   });
@@ -61,6 +62,10 @@ function onMessageByMain() {
   });
   window.electron.ipcRenderer.on('download-failed', () => {
     ElMessageBox.alert('下载更新失败', '网络异常');
+  });
+  window.electron.ipcRenderer.on('send-file', () => {});
+  window.electron.ipcRenderer.on('socket-message', (_event, params) => {
+    useSocketStore().messageData = params;
   });
 }
 export { onMessageByMain };

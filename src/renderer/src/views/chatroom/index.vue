@@ -20,7 +20,7 @@ const otherUserName = ref('');
   display: flex;
   height: 100%;
   .dv-userList-container {
-    width: 80px;
+    width: 100px;
   }
   .dv-chat-container {
     flex: 1;

@@ -1,9 +1,10 @@
-import { ipcMain, BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow, dialog } from 'electron';
 import { checkUpdate } from './update';
 import { createMainWindow } from '../window/main';
 import { createUpdateWindow } from '../window/update';
 import fs from 'fs';
 import { join } from 'path';
+import { createNoticeWindow } from '../window/notifications';
 function onMin(browserWindow: BrowserWindow) {
   ipcMain.on('min', () => {
     browserWindow.minimize();
@@ -22,8 +23,8 @@ function onClose(browserWindow: BrowserWindow) {
   });
 }
 function onExit(browserWindow: BrowserWindow) {
-  ipcMain.on('exit', () => {
-    browserWindow.close();
+  ipcMain.on('exit', (_event, params) => {
+    if (params != 'notice') browserWindow.close();
   });
 }
 function onCheckUpdate(browserWindow: BrowserWindow) {
@@ -46,18 +47,31 @@ function onLogin(browserWindow: BrowserWindow) {
 function onReceiveFile() {
   ipcMain.on('receive-file', (_event, params) => {
     if (fs.existsSync(join(process.cwd(), '/Receive File'))) {
-      fs.writeFileSync(
-        join(process.cwd(), `/Receive File/${params.name}`),
-        new Int32Array(params.raw)
-      );
+      fs.writeFileSync(join(process.cwd(), `/Receive File/${params.fileName}`), params.data);
     } else {
       fs.mkdir(join(process.cwd(), '/Receive File'), () => {
-        fs.writeFileSync(
-          join(process.cwd(), `/Receive File/${params.name}`),
-          new Int32Array(params.raw)
-        );
+        fs.writeFileSync(join(process.cwd(), `/Receive File/${params.fileName}`), params.data);
       });
     }
+  });
+}
+function onOpenFile(browserWindow: BrowserWindow) {
+  ipcMain.on('open-file', () => {
+    dialog
+      .showOpenDialog(browserWindow, {
+        properties: ['openFile']
+      })
+      .then((res) => {
+        fs.readFile(res.filePaths[0], (err, data) => {
+          const fileName = res.filePaths[0].split('\\').pop();
+          browserWindow.webContents.send('send-file', { data, fileName });
+        });
+      });
+  });
+}
+function onSocketMessage() {
+  ipcMain.on('socket-message', (_event, params) => {
+    createNoticeWindow(params);
   });
 }
 function onIpc(browserWindow: BrowserWindow) {
@@ -69,6 +83,8 @@ function onIpc(browserWindow: BrowserWindow) {
   onInstall(browserWindow);
   onLogin(browserWindow);
   onReceiveFile();
+  onOpenFile(browserWindow);
+  onSocketMessage();
 }
 function offIpc() {
   ipcMain.removeAllListeners();

@@ -3,7 +3,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
+      path: '/home',
       component: () => import('@renderer/views/Redirect.vue'),
       redirect: '/user',
       children: [
@@ -25,7 +25,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/login',
+      path: '/',
       component: () => import('@renderer/views/Login.vue'),
       name: 'login'
     },
@@ -33,8 +33,20 @@ const router = createRouter({
       path: '/update',
       component: () => import('@renderer/views/Update.vue'),
       name: 'update'
+    },
+    {
+      path: '/notice',
+      component: () => import('@renderer/views/Notice.vue'),
+      name: 'notice'
     }
   ]
 });
-
+router.beforeEach((to, from) => {
+  if (to.path == '/notice') {
+    if (from.path != '/') {
+      return false;
+    }
+  }
+  return true;
+});
 export default router;
