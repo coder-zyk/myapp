@@ -43,7 +43,7 @@ function createLoginWindow(): void {
       autoUpdater.forceDevUpdateConfig = true;
       loginWindow.webContents.toggleDevTools();
     }
-
+    loginWindow.webContents.send('navigation', { path: '/' });
     onIpc(loginWindow);
     loginWindow.show();
     // loginWindow.webContents.send('navigation', { path: '/' });

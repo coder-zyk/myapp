@@ -62,7 +62,7 @@ function onOpenFile(browserWindow: BrowserWindow) {
         properties: ['openFile']
       })
       .then((res) => {
-        fs.readFile(res.filePaths[0], (err, data) => {
+        fs.readFile(res.filePaths[0], (_err, data) => {
           const fileName = res.filePaths[0].split('\\').pop();
           browserWindow.webContents.send('send-file', { data, fileName });
         });

@@ -17,9 +17,9 @@ type Menu = {
 const menus: Menu[] = [
   {
     id: 1,
-    title: '用户',
+    title: '首页',
     icon: User,
-    path: '/'
+    path: '/home'
   },
   {
     id: 2,
