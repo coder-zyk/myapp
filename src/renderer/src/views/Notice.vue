@@ -9,7 +9,6 @@ watch(
   () => useSocketStore().messageData,
   (value) => {
     messageList.value.push(value);
-    console.log(messageRef.value);
     nextTick(() => {
       messageRef.value.setScrollTop(messageRef.value.wrapRef.scrollHeight);
     });
@@ -36,6 +35,7 @@ const messageRef = ref();
 </template>
 <style scoped lang="scss">
 .dv-notice {
+  height: 200px;
   .operate {
     display: flex;
     justify-content: flex-end;

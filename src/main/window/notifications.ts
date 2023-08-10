@@ -1,6 +1,5 @@
 import { is } from '@electron-toolkit/utils';
 import { BrowserWindow, ipcMain, screen } from 'electron';
-import icon from '../../../resources/favicon.ico?asset';
 import { join } from 'path';
 let noticeWindow: BrowserWindow | null;
 /**创建通知窗口 */
@@ -16,9 +15,6 @@ function createNoticeWindow(params): void {
       resizable: false, // 禁止窗口手动调整窗口大小
       fullscreenable: false, // 禁止窗口可以进入全屏状态
       alwaysOnTop: true, // 窗口是否永远在别的窗口的上面
-      title: '通知',
-      icon: join(__dirname, '../../resources/favicon.ico'),
-      ...(process.platform === 'linux' ? { icon } : {}),
       webPreferences: {
         preload: join(__dirname, '../preload/index.js'),
         sandbox: false
@@ -28,9 +24,9 @@ function createNoticeWindow(params): void {
     noticeWindow.setPosition(width - 300, height - 200);
     noticeWindow.menuBarVisible = false;
     noticeWindow.on('ready-to-show', () => {
-      noticeWindow?.showInactive();
       noticeWindow?.webContents.send('navigation', { path: '/notice' });
       noticeWindow?.webContents.send('socket-message', params);
+      noticeWindow?.showInactive();
     });
     ipcMain.on('exit', () => {
       noticeWindow?.close();

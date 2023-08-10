@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu, Tray, shell } from 'electron';
+import { BrowserWindow, Menu, Tray, shell, app } from 'electron';
 import { join } from 'path';
 import icon from '../../../resources/favicon.ico?asset';
 import { is } from '@electron-toolkit/utils';
@@ -26,7 +26,7 @@ function createMainWindow(userInfo): void {
     {
       label: '退出',
       click() {
-        mainWindow.close();
+        app.exit();
       }
     }
   ]);

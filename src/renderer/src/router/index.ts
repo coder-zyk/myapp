@@ -4,6 +4,7 @@ const router = createRouter({
   routes: [
     {
       path: '/home',
+      name: 'home',
       component: () => import('@renderer/views/Redirect.vue'),
       redirect: '/user',
       children: [
@@ -43,7 +44,9 @@ const router = createRouter({
 });
 router.beforeEach((to, from) => {
   if (to.path == '/notice') {
-    if (from.path != '/') {
+    if (from.path == '/' || from.path.includes('index.html')) {
+      return true;
+    } else {
       return false;
     }
   }
