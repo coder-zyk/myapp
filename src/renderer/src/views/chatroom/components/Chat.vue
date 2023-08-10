@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { Message } from '..';
 import { checkMessage } from '../util';
-import { UploadFile, dayjs } from 'element-plus';
+import { dayjs } from 'element-plus';
 import { getLocalStorage } from '@renderer/util/storage';
 import SocktUtil from '@renderer/util/socket';
 import { GetMessageList } from '@renderer/api/index';
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import { useConfStore } from '@renderer/store/conf';
 import { Folder } from '@element-plus/icons-vue';
-import { CallClient } from '@renderer/util/call';
+// import { CallClient } from '@renderer/util/call';
 const props = defineProps<{ otherUserName: string }>();
 watch(
   () => props.otherUserName,
@@ -93,19 +93,15 @@ function mouseleavetHandle(_event: MouseEvent) {
   }
 }
 const inputScrollRef = ref();
-onUnmounted(() => {
-  // socket.close()
-});
+
 function keyupHandle(event: KeyboardEvent) {
   if (event.key == 'Enter' && event.ctrlKey) {
     sendMessage();
   }
 }
-const client = new CallClient(currentUser.userName);
-const uploadRef = ref();
-function onFileChange(uploadFile: UploadFile) {
-  client.send(props.otherUserName, uploadFile);
-  uploadRef.value.clearFiles();
+// const client = new CallClient(currentUser.userName);
+function onFileChange() {
+  window.electron.ipcRenderer.send('open-file');
 }
 </script>
 <template>
@@ -129,16 +125,7 @@ function onFileChange(uploadFile: UploadFile) {
     </div>
     <div class="chat-input" @click="inputRef?.focus()">
       <div class="chat-operate">
-        <el-upload
-          ref="uploadRef"
-          action=""
-          :auto-upload="false"
-          :on-change="onFileChange"
-          :limit="1"
-          :show-file-list="false"
-        >
-          <el-icon title="上传文件"><Folder /></el-icon
-        ></el-upload>
+        <el-icon title="上传文件" @click="onFileChange"><Folder /></el-icon>
       </div>
       <el-scrollbar ref="inputScrollRef" style="height: 119px; width: 100%">
         <div
