@@ -8,7 +8,7 @@ type Message = {
   createTime: number;
   /**内容 */
   content: string;
-  /**消息类型 */
+  /**消息类型 1文本,2文件*/
   type: 1 | 2;
 };
 export type { Message };

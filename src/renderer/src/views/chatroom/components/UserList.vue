@@ -4,8 +4,8 @@ import { useSocketStore } from '@renderer/store/socket';
 import { UserInfo } from '@renderer/types';
 import { getLocalStorage } from '@renderer/util/storage';
 import { ref, toRaw, watch } from 'vue';
-const props = defineProps<{ modelValue: string }>();
-const emits = defineEmits<{ 'update:modelValue': [modleValue: string] }>();
+const props = defineProps<{ modelValue: UserInfo }>();
+const emits = defineEmits<{ 'update:modelValue': [modleValue: UserInfo] }>();
 const currentUser = getLocalStorage('userInfo');
 const userList = ref<UserInfo[]>([]);
 GetUserList({ userName: currentUser.userName }).then((res) => {
@@ -13,7 +13,7 @@ GetUserList({ userName: currentUser.userName }).then((res) => {
 });
 function clickHandle(item: UserInfo) {
   item.count = 0;
-  emits('update:modelValue', item.userName);
+  emits('update:modelValue', item);
 }
 watch(
   () => useSocketStore().messageData,
@@ -35,7 +35,7 @@ watch(
     <div
       v-for="item in userList"
       :key="item.id"
-      :class="`dv-user ${props.modelValue == item.userName ? 'active' : ''}`"
+      :class="`dv-user ${props.modelValue.userName == item.userName ? 'active' : ''}`"
       @click="clickHandle(item)"
     >
       <div class="userinfo">

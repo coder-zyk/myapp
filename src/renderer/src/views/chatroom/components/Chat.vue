@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { Message } from '..';
 import { checkMessage } from '../util';
-import { dayjs } from 'element-plus';
+import { ElMessage, dayjs } from 'element-plus';
 import { getLocalStorage } from '@renderer/util/storage';
 import SocktUtil from '@renderer/util/socket';
 import { GetMessageList } from '@renderer/api/index';
 import { nextTick, onMounted, ref, watch } from 'vue';
 import { useConfStore } from '@renderer/store/conf';
 import { Folder } from '@element-plus/icons-vue';
+import { UserInfo } from '@renderer/types';
 // import { CallClient } from '@renderer/util/call';
-const props = defineProps<{ otherUserName: string }>();
+
+const props = defineProps<{ otherUser: UserInfo }>();
 watch(
-  () => props.otherUserName,
+  () => props.otherUser,
   (value) => {
     if (value) {
       messageList.value = [];
@@ -23,7 +25,7 @@ watch(
 const socket = new SocktUtil(`ws://${useConfStore().serverAddress}/websocket?token=zyk`);
 const currentUser = getLocalStorage('userInfo');
 function onMessage(message) {
-  if (message.code == 1 && message.data.fromUserName == props.otherUserName) {
+  if (message.code == 1 && message.data.fromUserName == props.otherUser.userName) {
     messageList.value.push(message.data);
     nextTick(() => {
       scrollRef.value.setScrollTop(scrollRef.value.wrapRef.scrollHeight);
@@ -39,7 +41,7 @@ function sendMessage() {
     fromUserName: currentUser.userName,
     createTime: new Date().getTime(),
     content: messageHtml,
-    toUserName: props.otherUserName,
+    toUserName: props.otherUser.userName,
     type: 1
   };
   if (messageHtml) {
@@ -58,7 +60,7 @@ function sendMessage() {
 }
 /**获取消息列表 */
 function getMessageList() {
-  GetMessageList({ userName: currentUser.userName, otherUserName: props.otherUserName }).then(
+  GetMessageList({ userName: currentUser.userName, otherUserName: props.otherUser.userName }).then(
     (res) => {
       messageList.value = res.data as Message[];
       nextTick(() => {
@@ -70,18 +72,42 @@ function getMessageList() {
 }
 onMounted(() => {
   getMessageList();
+  document.oncopy = () => {};
 });
 const inputRef = ref<HTMLDivElement>();
 const scrollRef = ref();
+
 /**输入框粘贴事件 */
 function pasteHandle(event: ClipboardEvent) {
+  console.log(event.clipboardData?.files);
+
   event.preventDefault();
-  const data = event.clipboardData?.getData('text');
-  const selection = window.getSelection();
-  if (!selection?.rangeCount) return;
-  selection.deleteFromDocument();
-  selection.getRangeAt(0).insertNode(document.createTextNode(data!));
-  selection.collapseToEnd();
+  const clipboardData = event.clipboardData;
+  for (const item of clipboardData!.files) {
+    if (item.type.includes('image')) {
+      const image = new Image();
+      image.src = item.path;
+      let width = 0,
+        height = 0;
+      if (image.height > image.width) {
+        height = 100;
+        width = (100 * image.width) / image.height;
+      } else {
+        width = 100;
+        height = (100 * image.height) / image.width;
+      }
+      image.style = 'margin-right:5px';
+      image.height = height;
+      image.width = width;
+
+      const selection = window.getSelection();
+      if (!selection?.rangeCount) return;
+      selection.deleteFromDocument();
+      selection.getRangeAt(0).insertNode(image);
+      selection.collapseToEnd();
+    }
+  }
+
   nextTick(() => {
     inputScrollRef.value.setScrollTop(inputScrollRef.value.wrapRef.scrollHeight);
   });
@@ -101,7 +127,13 @@ function keyupHandle(event: KeyboardEvent) {
 }
 // const client = new CallClient(currentUser.userName);
 function onFileChange() {
-  window.electron.ipcRenderer.send('open-file');
+  if (props.otherUser.isLogin) window.electron.ipcRenderer.send('open-file');
+  else ElMessage.warning('对方在线时才能发送文件!');
+}
+function dropHandle(event: DragEvent) {
+  event.stopPropagation();
+  event.preventDefault();
+  console.log(event.dataTransfer?.files);
 }
 </script>
 <template>
@@ -132,8 +164,10 @@ function onFileChange() {
           ref="inputRef"
           class="input"
           contenteditable
+          spellcheck="false"
           @paste="pasteHandle"
           @keyup="keyupHandle"
+          @drop="dropHandle"
         ></div>
       </el-scrollbar>
     </div>
@@ -185,6 +219,8 @@ function onFileChange() {
           padding: 10px;
           user-select: text;
           white-space: pre-wrap;
+          word-wrap: break-word;
+          word-break: break-all;
         }
       }
     }
@@ -212,12 +248,18 @@ function onFileChange() {
       position: absolute;
       height: 30px;
       top: 5px;
+      :hover {
+        color: #0099ff;
+      }
     }
     .input {
       width: auto;
-      min-height: 119px;
+      max-height: 119px;
+      line-height: 30px;
       color: #000;
       white-space: pre-wrap;
+      word-wrap: break-word;
+      word-break: break-all;
       &:focus-visible {
         outline: unset;
       }

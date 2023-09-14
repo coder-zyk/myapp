@@ -88,5 +88,6 @@ function onIpc(browserWindow: BrowserWindow) {
 }
 function offIpc() {
   ipcMain.removeAllListeners();
+  ipcMain.removeHandler('paste');
 }
 export { onIpc, offIpc };

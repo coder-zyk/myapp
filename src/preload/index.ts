@@ -1,11 +1,13 @@
-import { contextBridge } from 'electron';
+import { contextBridge, clipboard } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
-import { readFileSync } from 'fs';
+import fs, { readFileSync } from 'fs';
 // Custom APIs for renderer
 
 const conf = JSON.parse(readFileSync(process.cwd() + '/config.conf').toString());
 const api = {
-  conf: conf
+  conf: conf,
+  clipboard: clipboard,
+  fs: fs
 };
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
